@@ -206,7 +206,7 @@ pub struct Skeleton
 {
     pub head_pos: Vector3,
     pub target_bone_pos: Vector3,
-    bone_array: *mut c_void
+    pub bone_array: *mut c_void
 }
 
 impl Default for Skeleton

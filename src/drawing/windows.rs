@@ -230,7 +230,9 @@ pub fn aim_element(ui: &mut Ui, global_aim_settings: &mut AimSettings, entities:
                                 TargetBone::HeadnNeck,
                                 lang.bone_headnneck(),
                             ).changed() {
-                                toasts.warning("Test");
+                                toasts.warning("Test this will target 60% head 40% neck");
+                                toasts.warning("Test this will target 60% head 40% neck");
+                                toasts.warning("Test this will target 60% head 40% neck");
                             }
                             if ui.selectable_value(
                                 &mut global_aim_settings.aim_bone,
