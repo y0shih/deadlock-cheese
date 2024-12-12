@@ -106,8 +106,7 @@ cargo build --release
    - Shows who is watching you
    - Shows who else is watching with you
 + Localization
-   - Russian
-   - Chinese
+   - Vietnamese (Nuoc mam edition) --Soon
    - English (Hamburger edition)
 + Scripts
    - Shiv - A script for ults (works only with quick casts). Displays low health threshold and uses ult (works poorly).

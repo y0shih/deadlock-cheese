@@ -347,6 +347,11 @@ impl Lang {
             Lang::EN => en::BONE_HEAD,
         }
     }
+    pub fn bone_headnneck(self) -> &'static str {
+        match self {
+            Lang::EN => en::BONE_HEADNNECK,
+        }
+    }
 
     pub fn bone_neck(self) -> &'static str {
         match self {
@@ -523,6 +528,7 @@ pub(super) mod en
 
     pub const BONE: &str = "Bone";
     pub const BONE_HEAD: &str = "Head";
+    pub const BONE_HEADNNECK: &str = "HeadnNeck";
     pub const BONE_NECK: &str = "Neck";
     pub const BONE_CHEST: &str = "Chest";
     pub const BONE_PELVIS: &str = "Pelvis";

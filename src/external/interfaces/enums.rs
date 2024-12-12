@@ -13,6 +13,7 @@ use super::math::Vector3;
 pub enum TargetBone
 {
     Head,
+    HeadnNeck,
     Neck,
     Pelvis,
     Chest
@@ -20,7 +21,44 @@ pub enum TargetBone
 
 impl TargetBone {
     pub fn get_bone_index(&self, hero: Hero) -> i32 {
-        if *self == TargetBone::Neck {
+
+        if *self == TargetBone::Head {
+            return match hero {
+                Hero::None => 0,
+                Hero::Infernus => 30,
+                Hero::Seven => 14,
+                Hero::Vindicta => 7,
+                Hero::LadyGeist => 11,
+                Hero::Abrams => 7,
+                Hero::Wraith => 7,
+                Hero::McGinnis => 7,
+                Hero::Paradox => 8,
+                Hero::Dynamo => 13,
+                Hero::Kelvin => 12,
+                Hero::Haze => 7,
+                Hero::Holliday => 6,
+                Hero::Bebop => 6,
+                Hero::Calico => 12,
+                Hero::GreyTalon => 17,
+                Hero::MoAndKrill => 25,
+                Hero::Shiv => 13,
+                Hero::Ivy => 13,
+                Hero::Viper => 6,
+                Hero::Warden => 11,
+                Hero::Yamato => 33,
+                Hero::Lash => 12,
+                Hero::Viscous => 7,
+                Hero::Wrecker => 7,
+                Hero::Pocket => 13,
+                Hero::Mirage => 8,
+                Hero::Fathom => 12,
+                Hero::Dummy => 34,
+                Hero::Magician => 12,
+                Hero::Trapper => 12,
+            }
+        }
+
+        else if *self == TargetBone::Neck {
             return match hero {
                 Hero::None => 0,
                 Hero::Infernus => 29,
@@ -90,6 +128,7 @@ impl TargetBone {
                 Hero::Trapper => 15,
             }
         }
+
         else if *self == TargetBone::Chest { // SPINE_3
             return match hero {
                 Hero::None => 0,

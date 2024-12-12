@@ -157,10 +157,10 @@ fn find_entity(game: &External, local_player: &Player, settings: &AimProperties,
                 {
                     head_pos.z += 35f32;
                 }
-                else
-                {
-                    // Visibility Check
-                }
+                // else
+                // {
+                //     // Добавить настройку: Проверка на видимось?
+                // }
                 // if !ent.game_scene_node.dormant && game.view_matrix.transform(&mut head_pos) && in_fov(head_pos, center, settings.fov)
                 // {
                 //     let cur_distance = Vector3::distance_2d(head_pos, Vector3::from_pos2(center));
@@ -214,7 +214,7 @@ fn aim_to(point_world: Vector3, angle_per_pixel: f32, game: &External, settings:
     let aim_pixels = Pos2 {
         x: ((aim_angles.x / angle_per_pixel) * 100f32).round() / 100f32,
         y: ((aim_angles.y / angle_per_pixel) * 100f32).round() / 100f32,
-        // x: (aim_angles.x / angle_per_pixel).round(),L
+        // x: (aim_angles.x / angle_per_pixel).round(),
         // y: (aim_angles.y / angle_per_pixel).round(),
     };
 

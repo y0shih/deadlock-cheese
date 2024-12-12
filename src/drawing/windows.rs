@@ -227,6 +227,13 @@ pub fn aim_element(ui: &mut Ui, global_aim_settings: &mut AimSettings, entities:
                             }
                             if ui.selectable_value(
                                 &mut global_aim_settings.aim_bone,
+                                TargetBone::HeadnNeck,
+                                lang.bone_headnneck(),
+                            ).changed() {
+                                toasts.warning("Test");
+                            }
+                            if ui.selectable_value(
+                                &mut global_aim_settings.aim_bone,
                                 TargetBone::Neck,
                                 lang.bone_neck(),
                             ).changed() {

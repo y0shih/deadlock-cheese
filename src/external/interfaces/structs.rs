@@ -237,20 +237,33 @@ impl Skeleton
                         if i != -1
                         {
                             self.update_head(i);
-                            if *target_bone == TargetBone::Neck {
-                                let bone = TargetBone::Neck;
-                                self.target_bone_pos = read_memory(self.bone_array.add(bone.get_bone_index(hero) as usize * 32usize));
-                            }
-                            else if *target_bone == TargetBone::Pelvis {
-                                let bone = TargetBone::Pelvis;
-                                self.target_bone_pos = read_memory(self.bone_array.add(bone.get_bone_index(hero) as usize * 32usize));
-                            }
-                            else if *target_bone == TargetBone::Chest {
-                                let bone = TargetBone::Chest;
-                                self.target_bone_pos = read_memory(self.bone_array.add(bone.get_bone_index(hero) as usize * 32usize));
-                            }
-                            else {
-                                self.target_bone_pos = self.head_pos;
+                            match *target_bone {
+                                TargetBone::Neck => {
+                                    let bone = TargetBone::Neck;
+                                    self.target_bone_pos = read_memory(self.bone_array.add(bone.get_bone_index(hero) as usize * 32usize));
+                                },
+                                TargetBone::HeadnNeck => {
+                                    // Calculate the midpoint between head and neck
+                                    let head_bone: Vector3 = read_memory(self.bone_array.add(i as usize * 32usize));
+                                    let neck_bone: Vector3 = read_memory(self.bone_array.add(TargetBone::Neck.get_bone_index(hero) as usize * 32usize));
+                                    
+                                    self.target_bone_pos = Vector3 {
+                                        x: (head_bone.x + neck_bone.x) / 2.0,
+                                        y: (head_bone.y + neck_bone.y) / 2.0,
+                                        z: (head_bone.z + neck_bone.z) / 2.0,
+                                    };
+                                },
+                                TargetBone::Pelvis => {
+                                    let bone = TargetBone::Pelvis;
+                                    self.target_bone_pos = read_memory(self.bone_array.add(bone.get_bone_index(hero) as usize * 32usize));
+                                },
+                                TargetBone::Chest => {
+                                    let bone = TargetBone::Chest;
+                                    self.target_bone_pos = read_memory(self.bone_array.add(bone.get_bone_index(hero) as usize * 32usize));
+                                },
+                                _ => {
+                                    self.target_bone_pos = self.head_pos;
+                                }
                             }
                             return;
                         }
