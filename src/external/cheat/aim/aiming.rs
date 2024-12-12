@@ -2,9 +2,27 @@
 
 use std::{ffi::c_void, net::UdpSocket, thread, time::{Duration, Instant}};
 use egui::{util::undoer::Settings, Pos2};
-use crate::{external::{interfaces::{entities::Player, enums::EntityType, math::{Plane3D, Vector3}, structs::Camera}, External}, input::{keyboard::KeyState, mouse}, settings::structs::{AimProperties, AimSettings}};
+use crate::{
+    external::{
+        interfaces::{
+            entities::Player, 
+            enums::{EntityType, TargetBone}, 
+            math::{Plane3D, Vector3}, 
+            structs::Camera
+        }, 
+        External
+    }, 
+    input::{keyboard::KeyState, mouse}, 
+    settings::structs::{AimProperties, AimSettings},
+    memory::read_memory
+};
 
 use super::drawing;
+use rand::Rng;
+use rand::thread_rng;
+
+static mut LAST_BONE_SELECTION_TIME: Option<Instant> = None;
+static mut CURRENT_BONE_INDEX: Option<usize> = None;
 
 pub fn update(settings: &AimSettings, game: &mut External, socket: &UdpSocket)
 {
@@ -25,6 +43,34 @@ pub fn update(settings: &AimSettings, game: &mut External, socket: &UdpSocket)
                 if settings.players.velocity_prediction
                 {
                     target_pos = calc_velocity(target_pos, target.pawn.velocity, &settings.players);
+                }
+                if settings.aim_bone == TargetBone::HeadnNeck {
+                    let head_bone_index = target.data.hero.get_head_bone().unwrap_or(0) as usize;
+                    let neck_bone_index = TargetBone::Neck.get_bone_index(target.data.hero) as usize;
+                    
+                    unsafe {
+                        let current_time = Instant::now();
+                        
+                        if LAST_BONE_SELECTION_TIME.is_none() {
+                            LAST_BONE_SELECTION_TIME = Some(current_time);
+                        }
+                        
+                        if current_time.duration_since(LAST_BONE_SELECTION_TIME.unwrap()) >= Duration::from_millis(500) {
+                            CURRENT_BONE_INDEX = Some(match CURRENT_BONE_INDEX {
+                                Some(idx) if idx == head_bone_index => neck_bone_index,
+                                _ => head_bone_index,
+                            });
+                            
+                            LAST_BONE_SELECTION_TIME = Some(current_time);
+                        }
+                        
+                        let bone_index = CURRENT_BONE_INDEX.unwrap_or(head_bone_index);
+                        target_pos = read_memory(target.skeleton.bone_array.add(bone_index * 32usize));
+                        
+                        if bone_index == neck_bone_index {
+                            target_pos.y += 5f32;
+                        }
+                    }
                 }
                 let mut target_pos_screen = target_pos;
                 game.view_matrix.transform(&mut target_pos_screen);
@@ -157,10 +203,10 @@ fn find_entity(game: &External, local_player: &Player, settings: &AimProperties,
                 {
                     head_pos.z += 35f32;
                 }
-                else
-                {
-                    // Visibility Check
-                }
+                // else
+                // {
+                //     // Добавить настройку: Проверка на видимось?
+                // }
                 // if !ent.game_scene_node.dormant && game.view_matrix.transform(&mut head_pos) && in_fov(head_pos, center, settings.fov)
                 // {
                 //     let cur_distance = Vector3::distance_2d(head_pos, Vector3::from_pos2(center));
@@ -214,7 +260,7 @@ fn aim_to(point_world: Vector3, angle_per_pixel: f32, game: &External, settings:
     let aim_pixels = Pos2 {
         x: ((aim_angles.x / angle_per_pixel) * 100f32).round() / 100f32,
         y: ((aim_angles.y / angle_per_pixel) * 100f32).round() / 100f32,
-        // x: (aim_angles.x / angle_per_pixel).round(),L
+        // x: (aim_angles.x / angle_per_pixel).round(),
         // y: (aim_angles.y / angle_per_pixel).round(),
     };
 
